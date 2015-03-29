@@ -1,0 +1,56 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+$script = <<SCRIPT
+
+echo Installing dependencies...
+sudo apt-get install -y unzip curl
+
+echo Fetching Consul...
+cd /tmp/
+wget https://dl.bintray.com/mitchellh/consul/0.5.0_linux_amd64.zip -O consul.zip
+
+echo Installing Consul...
+unzip consul.zip
+sudo chmod +x consul
+sudo mv consul /usr/bin/consul
+
+SCRIPT
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "hashicorp/precise64"
+
+  config.vm.provision "shell", inline: $script
+
+  config.vm.define "node1" do |n1|
+      n1.vm.hostname = "node1"
+      n1.vm.network "private_network", ip: "172.20.20.10"
+      n1.vm.provision "shell", inline: "nohup consul agent -config-file /vagrant/conf/node1.json 2>&1 > /vagrant/consul-n1.log  &"
+      n1.vm.provision "docker" do |d|
+          d.run "svc1", image: "ksahnine/dummy-http", cmd: "svc1", auto_assign_name: false, daemonize: true, args: "-p 8081:8080"
+          d.run "svc2", image: "ksahnine/dummy-http", cmd: "svc2", auto_assign_name: false, daemonize: true, args: "-p 8082:8080"
+      end
+  end
+
+  config.vm.define "node2" do |n2|
+      n2.vm.hostname = "node2"
+      n2.vm.network "private_network", ip: "172.20.20.20"
+      n2.vm.provision "shell", inline: "nohup consul agent -config-file /vagrant/conf/node2.json 2>&1 > /vagrant/consul-n2.log  &"
+      n2.vm.provision "docker" do |d|
+          d.run "svc1", image: "ksahnine/dummy-http", cmd: "svc1", auto_assign_name: false, daemonize: true, args: "-p 8081:8080"
+          d.run "svc2", image: "ksahnine/dummy-http", cmd: "svc2", auto_assign_name: false, daemonize: true, args: "-p 8082:8080"
+      end
+  end
+  
+  config.vm.define "node3" do |n3|
+      n3.vm.hostname = "node3"
+      n3.vm.network "private_network", ip: "172.20.20.30"
+      n3.vm.provision "shell", inline: "nohup consul agent -config-file /vagrant/conf/node3.json 2>&1 > /vagrant/consul-n3.log  &"
+      n3.vm.provision "docker" do |d|
+          d.run "ksahnine/dummy-http", cmd: "svc3", auto_assign_name: false, daemonize: true, args: "--name svc3 -p 8083:8080"
+      end
+  end
+  
+  #config.vm.network "forwarded_port", guest: 8081, host: 8081
+end

@@ -1,0 +1,21 @@
+{
+    "node_name": "node3",
+    "server": false,
+    "data_dir": "/tmp/consul",
+    "ui_dir": "./dist",
+    "advertise_addr": "172.20.20.30",
+    "client_addr": "172.20.20.30",
+    "start_join": [ "172.20.20.10" ],
+    "ports": {
+        "dns": 8600
+    },
+    "disable_update_check": true,
+    "services": [
+        {
+            "id": "svc3_instance_1",
+            "name": "svc3",
+            "port": 8083,
+            "tags": ["api", "test"]
+        }
+    ]
+}

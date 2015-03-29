@@ -1,0 +1,13 @@
+{
+    "node_name": "node1",
+    "server": true,
+    "bootstrap_expect": 1,
+    "data_dir": "/tmp/consul",
+    "ui_dir": "./dist",
+    "advertise_addr": "172.20.20.10",
+    "client_addr": "172.20.20.10",
+    "ports": {
+        "dns": 53
+    },
+    "disable_update_check": true
+}

@@ -1,0 +1,27 @@
+{
+    "node_name": "node2",
+    "server": false,
+    "data_dir": "/tmp/consul",
+    "ui_dir": "./dist",
+    "advertise_addr": "172.20.20.20",
+    "client_addr": "172.20.20.20",
+    "start_join": [ "172.20.20.10" ],
+    "ports": {
+        "dns": 8600
+    },
+    "disable_update_check": true,
+    "services": [
+        {
+            "id": "svc1_instance_2",
+            "name": "svc1",
+            "port": 8081,
+            "tags": ["api", "test"]
+        },
+        {
+            "id": "svc2_instance_2",
+            "name": "svc2",
+            "port": 8082,
+            "tags": ["api", "test"]
+        }
+    ]
+}
