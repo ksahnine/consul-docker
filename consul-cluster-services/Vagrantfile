@@ -38,8 +38,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       n2.vm.network "private_network", ip: "172.20.20.20"
       n2.vm.provision "shell", inline: "nohup consul agent -config-file /vagrant/conf/node2.json 2>&1 > /vagrant/consul-n2.log  &"
       n2.vm.provision "docker" do |d|
-          d.run "svc1", image: "ksahnine/dummy-http", cmd: "svc1", auto_assign_name: false, daemonize: true, args: "-p 8081:8080"
           d.run "svc2", image: "ksahnine/dummy-http", cmd: "svc2", auto_assign_name: false, daemonize: true, args: "-p 8082:8080"
+          d.run "svc1", image: "ksahnine/dummy-http", cmd: "svc1", auto_assign_name: false, daemonize: true, args: "-p 8081:8080"
       end
   end
   
