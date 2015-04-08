@@ -39,7 +39,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       n2.vm.network "private_network", ip: "172.20.20.20"
       n2.vm.provision "shell", inline: "nohup consul agent -config-file /vagrant/conf/node2.json 2>&1 > /vagrant/consul-n2.log  &"
       n2.vm.provision "docker" do |d|
-          d.run "registrator", image: "gliderlabs/registrator", cmd: "consul://172.20.20.20:8500", daemonize: true, args: "-v /var/run/docker.sock:/tmp/docker.sock -h node1"
+          d.run "registrator", image: "gliderlabs/registrator", cmd: "consul://172.20.20.20:8500", daemonize: true, args: "-v /var/run/docker.sock:/tmp/docker.sock -h node2"
           d.run "svc2", image: "ksahnine/dummy-http", cmd: "svc2", auto_assign_name: false, daemonize: true, args: '-e "SERVICE_NAME=svc2" -p 8082:8080'
       end
   end
@@ -49,7 +49,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       n3.vm.network "private_network", ip: "172.20.20.30"
       n3.vm.provision "shell", inline: "nohup consul agent -config-file /vagrant/conf/node3.json 2>&1 > /vagrant/consul-n3.log  &"
       n3.vm.provision "docker" do |d|
-          d.run "registrator", image: "gliderlabs/registrator", cmd: "consul://172.20.20.30:8500", daemonize: true, args: "-v /var/run/docker.sock:/tmp/docker.sock -h node1"
+          d.run "registrator", image: "gliderlabs/registrator", cmd: "consul://172.20.20.30:8500", daemonize: true, args: "-v /var/run/docker.sock:/tmp/docker.sock -h node3"
           d.run "svc3", image: "ksahnine/dummy-http", cmd: "svc3", auto_assign_name: false, daemonize: true, args: '-e "SERVICE_NAME=svc3" -p 8083:8080'
       end
   end
